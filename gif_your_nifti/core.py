@@ -56,12 +56,20 @@ def load_and_prepare_image(filename, size=1):
 
     out_img = np.zeros([maximum] * 3)
 
-    a, b, c = data.shape
-    x, y, z = (list(data.shape) - maximum) / -2
+    if len(data.shape) > 3:
+        a, b, c = data.shape[0:3]
+        x, y, z = (list(data.shape[0:3]) - maximum) / -2
 
-    out_img[int(x):a + int(x),
-            int(y):b + int(y),
-            int(z):c + int(z)] = data
+        out_img[int(x):a + int(x),
+                int(y):b + int(y),
+                int(z):c + int(z)] = data[:, :, :, 0]
+    else:
+        a, b, c = data.shape
+        x, y, z = (list(data.shape) - maximum) / -2
+
+        out_img[int(x):a + int(x),
+                int(y):b + int(y),
+                int(z):c + int(z)] = data
 
     out_img /= out_img.max()  # scale image values between 0-1
 
